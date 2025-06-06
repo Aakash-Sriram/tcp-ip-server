@@ -9,9 +9,6 @@
 
 #define PORT 80 
 
-//       #include <sys/socket.h>
-
-//       int socket(int domain, int type, int protocol);
 
 int main(){
   
@@ -24,7 +21,7 @@ int main(){
     return 0;
   }
   memset(&sock,0,sizeof(sock));
-  sock.sin_addr.s_addr = INADDR_ANY;
+  inet_pton(AF_INET, "127.0.0.1", &sock.sin_addr);
   sock.sin_port = htons(PORT);
   sock.sin_family = AF_INET;
 
@@ -34,11 +31,21 @@ int main(){
     close(s);
     return -1;
   }
-
-  printf("connected");
-  char *message="Yoooo";
-  int sent = send(s,message,strlen(message),0);
-  if(sent<0)printf("didnt work");
+  printf("connected\n");
+  int no;
+  scanf("%d",&no);
+  printf("\n");
+  while(no>0){
+    printf("Enter text: "); 
+    char message[1024];
+    scanf("%1023s",message);
+    int sent = send(s,message,strlen(message),0);
+    if(sent<0){
+      printf("didnt work");
+      close(s);
+    }
+    no--;
+  }
   close(s);
   return 0;
   

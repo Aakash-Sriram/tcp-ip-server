@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 
+
 #define PORT 80
 
 int main(){
@@ -19,7 +20,7 @@ int main(){
   printf("socket() worked");
   memset(&sock,0,sizeof(sock));
   sock.sin_port = htons(PORT);
-  sock.sin_addr.s_addr =htonl(INADDR_ANY);
+inet_pton(AF_INET, "127.0.0.1", &sock.sin_addr);
   sock.sin_family = AF_INET;
  
   if (bind(s, (struct sockaddr*)&sock, sizeof(sock)) < 0) {
@@ -43,21 +44,26 @@ int main(){
     return 1;
   }else printf("accepted\n");
 
-  char buffer[256];
-  
-  ssize_t rec = recv(client_fd,buffer,sizeof(buffer)-1,0);
-  if(rec<0){
-    perror("didnt receieve message");
-    close(s);
-    return 1;
-  }
-  else if(rec==0){
-    printf("client connection closed");
-  }
-  else{
-    buffer[rec]='\0';
-
-    printf("Recieved message: %s",buffer);
+  char buffer[1024];
+  while(1){
+    memset(&buffer,0,sizeof(buffer));
+    ssize_t rec = recv(client_fd,buffer,sizeof(buffer)-1,0);
+    if(rec<0){
+      perror("didnt receieve message");
+      close(s);
+      break;
+      return -1;
+      }
+    else if(rec==0){
+      perror("client connection closed");
+      close(s);
+      break;
+      return -1;  
+    }
+    else{
+      buffer[rec]='\0';
+      printf("Recieved message: %s",buffer);
+    }  
   }
   close(s);
   return 0;
