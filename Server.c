@@ -4,13 +4,14 @@
 #include <arpa/inet.h>
 #include<sys/types.h>
 #include<string.h>
+#include <unistd.h>
 
 #define PORT 80
 
 int main(){
   int s ;
   struct sockaddr_in sock;
-  s = socket(AFNET,SOCK_STREAM,0);
+  s = socket(AF_INET,SOCK_STREAM,0);
   if(s<0){
     printf("socket() failed");
   }
@@ -31,4 +32,30 @@ int main(){
       return 1;
   }else printf("listeningg...");
   
+  socklen_t socklen = sizeof(sock);
+  if( accept(s,(struct sockaddr *)&sock , &socklen)<0 ){
+    perror("Not accepting");
+    close(s);
+    return 1;
+  }else printf("accepted");
+
+  char buffer[256];
+  ssize_t rec = recv(s,buffer,sizeof(buffer)-1,0);
+  if(rec<0){
+    perror("didnt receieve message");
+    close(s);
+    return 1;
+  }
+  else if(rec==0){
+    printf("client connection closed");
+  }
+  else{
+    printf("recieved");
+  }
+
+  buffer[rec]='\0';
+
+  printf("Recieved message: %s",buffer);
+  close(s);
+  return 0;
 }
