@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 
-#define PORT 80
+#define PORT 8080
 
 int main(){
   int s ;
@@ -32,7 +32,7 @@ inet_pton(AF_INET, "127.0.0.1", &sock.sin_addr);
       perror("listen() error");
       close(s);
       return 1;
-  }else printf("listeningg...");
+  }else printf("listeningg...\n");
   
   socklen_t socklen = sizeof(sock);
   

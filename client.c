@@ -7,7 +7,7 @@
 #include <arpa/inet.h>
 #include<sys/types.h>
 
-#define PORT 80 
+#define PORT 8080
 
 
 int main(){
