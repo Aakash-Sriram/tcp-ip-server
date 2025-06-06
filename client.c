@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include<sys/types.h>
 
-#define IP"142.250.66.4" 
 #define PORT 80 
 
 //       #include <sys/socket.h>
@@ -22,13 +24,13 @@ int main(){
     return 0;
   }
   memset(&sock,0,sizeof(sock));
-  sock.sin_addr.s_addr = inet_addr(IP);
+  sock.sin_addr.s_addr = INADDR_ANY;
   sock.sin_port = htons(PORT);
   sock.sin_family = AF_INET;
 
 
-  if( connect(s, (struct sock_addr*)&socket,sizeof(sock_addr) ) <0 ){
-    printf("connect() error\n");
+  if( connect(s, (const struct sockaddr*)&sock,sizeof(sock) ) <0 ){
+    perror("connect() error");
     close(s);
     return -1;
   }

@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include <errno.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include<sys/types.h>
-#include<string.h>
+#include <sys/types.h>
+#include <string.h>
 #include <unistd.h>
 
 #define PORT 80
@@ -33,14 +34,18 @@ int main(){
   }else printf("listeningg...");
   
   socklen_t socklen = sizeof(sock);
-  if( accept(s,(struct sockaddr *)&sock , &socklen)<0 ){
+  
+  int client_fd = accept(s,(struct sockaddr*)&sock,&socklen); 
+
+  if( client_fd<0 ){
     perror("Not accepting");
     close(s);
     return 1;
-  }else printf("accepted");
+  }else printf("accepted\n");
 
   char buffer[256];
-  ssize_t rec = recv(s,buffer,sizeof(buffer)-1,0);
+  
+  ssize_t rec = recv(client_fd,buffer,sizeof(buffer)-1,0);
   if(rec<0){
     perror("didnt receieve message");
     close(s);
@@ -50,12 +55,10 @@ int main(){
     printf("client connection closed");
   }
   else{
-    printf("recieved");
+    buffer[rec]='\0';
+
+    printf("Recieved message: %s",buffer);
   }
-
-  buffer[rec]='\0';
-
-  printf("Recieved message: %s",buffer);
   close(s);
   return 0;
 }
