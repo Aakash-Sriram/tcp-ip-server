@@ -33,6 +33,7 @@ int main(){
   }
   printf("connected\n");
   int no;
+  printf("Enter no of messages to send:");
   scanf("%d",&no);
   printf("\n");
   while(no>0){

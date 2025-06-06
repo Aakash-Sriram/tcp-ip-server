@@ -62,7 +62,7 @@ inet_pton(AF_INET, "127.0.0.1", &sock.sin_addr);
     }
     else{
       buffer[rec]='\0';
-      printf("Recieved message: %s",buffer);
+      printf("Recieved message: %s\n",buffer);
     }  
   }
   close(s);
